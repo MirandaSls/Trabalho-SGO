@@ -114,6 +114,6 @@ Diagramas modelados em [PlantUML](https://plantuml.com/).
 
 ## Autor
 
-Arthur Miranda Sales
+- Arthur Miranda Sales
 
-Gustavo Pessoa Firmino Duarte
+- Gustavo Pessoa Firmino Duarte
