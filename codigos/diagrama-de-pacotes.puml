@@ -2,80 +2,73 @@
 title Diagrama de Pacotes - Sistema de Gestao das Olimpiadas (SGO)
 
 skinparam packageStyle rectangle
-skinparam linetype ortho
+skinparam linetype polyline
+skinparam nodesep 40
+skinparam ranksep 60
 
 package "br.com.sgo" {
 
-  package "apresentacao" as APR {
-    package "view" {
-    }
-    package "controller" {
-    }
+  package "apresentacao" {
+    package "view"
+    package "controller"
   }
 
-  package "aplicacao" as APP {
-    package "servicos" {
-    }
-    package "dto" {
-    }
+  package "aplicacao" {
+    package "servicos"
+    package "dto"
   }
 
-  package "dominio" as DOM {
-    package "entidades" {
-    }
-    package "enums" {
-    }
-    package "repositorios" {
-    }
+  package "relatorios" {
+    package "geradores"
+    package "templates"
   }
 
-  package "persistencia" as PER {
-    package "jpa" {
-    }
-    package "mappers" {
-    }
+  package "dominio" {
+    package "entidades"
+    package "enums"
+    package "repositorios"
   }
 
-  package "infraestrutura" as INF {
-    package "seguranca" {
-    }
-    package "config" {
-    }
-    package "utils" {
-    }
+  package "persistencia" {
+    package "jpa"
+    package "mappers"
   }
 
-  package "relatorios" as REL {
-    package "geradores" {
-    }
-    package "templates" {
-    }
+  package "infraestrutura" {
+    package "seguranca"
+    package "config"
+    package "utils"
   }
-
 }
 
-APR ..> APP : usa
-APP ..> DOM : usa
-APP ..> REL : usa
-PER ..> DOM : implementa
-PER ..> INF : usa
-REL ..> DOM : usa
-APR ..> INF : usa
-APP ..> INF : usa
+' --- Dependencias entre camadas ---
+apresentacao   ..>  aplicacao      : <<usa>>
+aplicacao      ..>  dominio        : <<usa>>
+aplicacao      ..>  relatorios     : <<usa>>
+relatorios     ..>  dominio        : <<usa>>
+persistencia   ..>  dominio        : <<implementa>>
+persistencia   ..>  infraestrutura : <<usa>>
+apresentacao   ..>  infraestrutura : <<usa>>
+aplicacao      ..>  infraestrutura : <<usa>>
 
-note right of APR
-  Camada de interface
-  com o usuario (Web/API)
+note right of apresentacao
+  Interface com o usuario
+  (Web / REST)
 end note
 
-note right of DOM
+note right of dominio
   Nucleo do sistema
   Regras de negocio
 end note
 
-note right of PER
+note right of persistencia
   Acesso a dados
   JPA / Hibernate
+end note
+
+note bottom of infraestrutura
+  Recursos transversais
+  (seguranca, config, utils)
 end note
 
 @enduml

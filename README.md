@@ -84,7 +84,7 @@ Com a chegada das Olimpíadas, um novo sistema de gestão é necessário para co
 
 ### Diagrama de Implantação
 
-<img width="700px" src="imagens/diagrama-de-implantacao.png" alt="Diagrama de Implantação"/>
+<img width="700px" src="imagens/diagrama-de-implantação.png" alt="Diagrama de Implantação"/>
 
 ## Estrutura do Repositório
 
@@ -96,13 +96,13 @@ Trabalho-SGO/
 │   ├── diagrama-de-classes.png
 │   ├── diagrama-de-pacotes.png
 │   ├── diagrama-de-componentes.png
-│   └── diagrama-de-implantacao.png
+│   └── diagrama-de-implantação.png
 └── codigos/
     ├── diagrama-de-caso-de-uso.puml
     ├── diagrama-de-classes.puml
     ├── diagrama-de-pacotes.puml
     ├── diagrama-de-componentes.puml
-    └── diagrama-de-implantacao.puml
+    └── diagrama-de-implantação.puml
 ```
 
 ## Tecnologia

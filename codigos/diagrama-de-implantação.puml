@@ -1,4 +1,4 @@
-@startuml diagrama-de-implantacao
+@startuml diagrama-de-implantação
 title Diagrama de Implantacao - Sistema de Gestao das Olimpiadas (SGO)
 
 skinparam linetype ortho

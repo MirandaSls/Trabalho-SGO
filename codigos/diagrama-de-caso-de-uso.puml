@@ -4,17 +4,22 @@ title Diagrama de Caso de Uso - Sistema de Gestao das Olimpiadas (SGO)
 left to right direction
 skinparam packageStyle rectangle
 skinparam actorStyle awesome
+skinparam usecase {
+  BackgroundColor #FEFEFE
+  BorderColor #555555
+}
 
+actor "Usuario" as USR
 actor "Administrador" as ADM
 actor "Representante\nde Delegacao" as REP
 actor "Arbitro" as ARB
-actor "Usuario" as USR
 
 USR <|-- ADM
 USR <|-- REP
 USR <|-- ARB
 
-rectangle "Sistema de Gestao das Olimpiadas" {
+rectangle "Sistema de Gestao das Olimpiadas (SGO)" {
+
   usecase "UC01\nCadastrar Competicao" as UC01
   usecase "UC02\nInscrever Atleta" as UC02
   usecase "UC03\nAlocar Local" as UC03
@@ -24,12 +29,15 @@ rectangle "Sistema de Gestao das Olimpiadas" {
   usecase "UC07\nGerenciar Atletas" as UC07
   usecase "UC08\nGerenciar Locais" as UC08
 
+  usecase "Autenticar Usuario" as UCA
   usecase "Validar Conflito\nde Horario" as UCV
   usecase "Validar Pais\ndo Atleta" as UCP
-  usecase "Atribuir Medalhas\n(Ouro, Prata, Bronze)" as UCM
-  usecase "Autenticar Usuario" as UCA
+  usecase "Atribuir Medalhas\n(Ouro / Prata / Bronze)" as UCM
+  usecase "Cancelar Inscricao" as UCC
+  usecase "Ver Detalhes\nda Competicao" as UCD
 }
 
+' --- Associacoes ator -> caso de uso ---
 ADM --> UC01
 ADM --> UC03
 ADM --> UC05
@@ -43,6 +51,7 @@ REP --> UC06
 ARB --> UC04
 ARB --> UC06
 
+' --- Includes (comportamento obrigatorio) ---
 UC01 ..> UCA : <<include>>
 UC02 ..> UCA : <<include>>
 UC03 ..> UCA : <<include>>
@@ -51,12 +60,13 @@ UC05 ..> UCA : <<include>>
 UC07 ..> UCA : <<include>>
 UC08 ..> UCA : <<include>>
 
+UC01 ..> UCV : <<include>>
 UC03 ..> UCV : <<include>>
 UC02 ..> UCP : <<include>>
 UC04 ..> UCM : <<include>>
 
-UC05 ..> UC04 : <<extend>>
-UC01 ..> UC03 : <<extend>>
-UC01 ..> UC02 : <<extend>>
+' --- Extends (comportamento opcional / variante) ---
+UCC ..> UC02 : <<extend>>
+UCD ..> UC06 : <<extend>>
 
 @enduml
