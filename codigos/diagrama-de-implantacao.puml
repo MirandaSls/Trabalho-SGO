@@ -1,0 +1,62 @@
+@startuml diagrama-de-implantacao
+title Diagrama de Implantacao - Sistema de Gestao das Olimpiadas (SGO)
+
+skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 60
+
+node "Dispositivo do Usuario\n<<device>>" as DEV {
+  artifact "Navegador Web\n(Chrome, Firefox, Safari)" as BROWSER
+  artifact "Aplicativo Mobile\n(Android / iOS)" as MOBILE
+}
+
+cloud "Internet" as NET
+
+node "Servidor de Aplicacao\n<<application server>>" as APP {
+  artifact "SGO-API.jar\n(Spring Boot)" as SGOAPI
+  artifact "Servidor Web\n(Tomcat / Nginx)" as WEB
+}
+
+node "Servidor de Banco de Dados\n<<database server>>" as DBS {
+  database "PostgreSQL 15" as DB {
+    artifact "sgo_db" as SCHEMA
+  }
+}
+
+node "Servidor de Relatorios\n<<report server>>" as REP {
+  artifact "Servico de Geracao\nde Relatorios" as RGEN
+  artifact "JasperReports\nEngine" as JR
+}
+
+node "Servidor de Arquivos\n<<file server>>" as FS {
+  artifact "Armazenamento\nde PDFs" as PDFS
+  artifact "Armazenamento\nde Imagens" as IMGS
+}
+
+node "Servidor de\nAutenticacao\n<<auth server>>" as AUTH {
+  artifact "OAuth2 / JWT\nService" as OAUTH
+}
+
+DEV -down- NET : HTTPS
+
+NET -down- WEB : "HTTPS\n(443)"
+WEB -down- SGOAPI
+
+SGOAPI -right-> DB : "JDBC\n(5432)"
+SGOAPI -down-> RGEN : "REST/HTTPS"
+SGOAPI -up-> OAUTH : "REST/HTTPS"
+RGEN -right-> JR
+RGEN -down-> PDFS : "FTP/SMB"
+SGOAPI -down-> IMGS : "FTP/SMB"
+
+note right of APP
+  Hospedado em ambiente
+  cloud (AWS EC2 / Azure VM)
+end note
+
+note right of DB
+  Replicacao master-slave
+  Backup diario
+end note
+
+@enduml

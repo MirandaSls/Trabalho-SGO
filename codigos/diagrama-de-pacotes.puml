@@ -1,0 +1,81 @@
+@startuml diagrama-de-pacotes
+title Diagrama de Pacotes - Sistema de Gestao das Olimpiadas (SGO)
+
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+package "br.com.sgo" {
+
+  package "apresentacao" as APR {
+    package "view" {
+    }
+    package "controller" {
+    }
+  }
+
+  package "aplicacao" as APP {
+    package "servicos" {
+    }
+    package "dto" {
+    }
+  }
+
+  package "dominio" as DOM {
+    package "entidades" {
+    }
+    package "enums" {
+    }
+    package "repositorios" {
+    }
+  }
+
+  package "persistencia" as PER {
+    package "jpa" {
+    }
+    package "mappers" {
+    }
+  }
+
+  package "infraestrutura" as INF {
+    package "seguranca" {
+    }
+    package "config" {
+    }
+    package "utils" {
+    }
+  }
+
+  package "relatorios" as REL {
+    package "geradores" {
+    }
+    package "templates" {
+    }
+  }
+
+}
+
+APR ..> APP : usa
+APP ..> DOM : usa
+APP ..> REL : usa
+PER ..> DOM : implementa
+PER ..> INF : usa
+REL ..> DOM : usa
+APR ..> INF : usa
+APP ..> INF : usa
+
+note right of APR
+  Camada de interface
+  com o usuario (Web/API)
+end note
+
+note right of DOM
+  Nucleo do sistema
+  Regras de negocio
+end note
+
+note right of PER
+  Acesso a dados
+  JPA / Hibernate
+end note
+
+@enduml

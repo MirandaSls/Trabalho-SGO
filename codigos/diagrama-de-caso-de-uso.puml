@@ -1,0 +1,62 @@
+@startuml diagrama-de-caso-de-uso
+title Diagrama de Caso de Uso - Sistema de Gestao das Olimpiadas (SGO)
+
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+actor "Administrador" as ADM
+actor "Representante\nde Delegacao" as REP
+actor "Arbitro" as ARB
+actor "Usuario" as USR
+
+USR <|-- ADM
+USR <|-- REP
+USR <|-- ARB
+
+rectangle "Sistema de Gestao das Olimpiadas" {
+  usecase "UC01\nCadastrar Competicao" as UC01
+  usecase "UC02\nInscrever Atleta" as UC02
+  usecase "UC03\nAlocar Local" as UC03
+  usecase "UC04\nRegistrar Resultados" as UC04
+  usecase "UC05\nGerar Relatorio\nde Medalhas" as UC05
+  usecase "UC06\nConsultar Competicoes" as UC06
+  usecase "UC07\nGerenciar Atletas" as UC07
+  usecase "UC08\nGerenciar Locais" as UC08
+
+  usecase "Validar Conflito\nde Horario" as UCV
+  usecase "Validar Pais\ndo Atleta" as UCP
+  usecase "Atribuir Medalhas\n(Ouro, Prata, Bronze)" as UCM
+  usecase "Autenticar Usuario" as UCA
+}
+
+ADM --> UC01
+ADM --> UC03
+ADM --> UC05
+ADM --> UC08
+ADM --> UC06
+
+REP --> UC02
+REP --> UC07
+REP --> UC06
+
+ARB --> UC04
+ARB --> UC06
+
+UC01 ..> UCA : <<include>>
+UC02 ..> UCA : <<include>>
+UC03 ..> UCA : <<include>>
+UC04 ..> UCA : <<include>>
+UC05 ..> UCA : <<include>>
+UC07 ..> UCA : <<include>>
+UC08 ..> UCA : <<include>>
+
+UC03 ..> UCV : <<include>>
+UC02 ..> UCP : <<include>>
+UC04 ..> UCM : <<include>>
+
+UC05 ..> UC04 : <<extend>>
+UC01 ..> UC03 : <<extend>>
+UC01 ..> UC02 : <<extend>>
+
+@enduml

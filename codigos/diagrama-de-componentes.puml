@@ -1,0 +1,76 @@
+@startuml diagrama-de-componentes
+title Diagrama de Componentes - Sistema de Gestao das Olimpiadas (SGO)
+
+skinparam componentStyle rectangle
+skinparam component {
+  BackgroundColor #FEFEFE
+  BorderColor #555555
+}
+
+package "Camada Cliente" {
+  [Interface de Usuario\n(Web / Mobile)] as UI
+}
+
+package "Camada de Apresentacao" {
+  [API Gateway] as GW
+}
+
+package "Camada de Aplicacao (Modulos de Negocio)" {
+  [Modulo de\nAutenticacao] as AUTH
+  [Modulo de\nCompeticoes] as MCO
+  [Modulo de\nInscricoes] as MIN
+  [Modulo de\nAlocacao\nde Locais] as MAL
+  [Modulo de\nResultados] as MRE
+  [Modulo de\nRelatorios] as MRL
+  [Modulo de\nAtletas] as MAT
+}
+
+package "Camada de Dados" {
+  database "Banco de Dados\nRelacional" as DB
+  [Servidor de\nArquivos] as FS
+}
+
+' Interfaces principais (lollipop)
+interface "HTTPS/REST" as IHTTPS
+interface "JDBC" as IJDBC
+interface "FileSystem" as IFS
+
+UI ..( IHTTPS
+IHTTPS - GW
+
+GW --> AUTH : IAutenticacao
+GW --> MCO : ICompeticoes
+GW --> MIN : IInscricoes
+GW --> MAL : IAlocacao
+GW --> MRE : IResultados
+GW --> MRL : IRelatorios
+GW --> MAT : IAtletas
+
+' Dependencias internas entre modulos
+MIN ..> MCO : <<use>>
+MIN ..> MAT : <<use>>
+MAL ..> MCO : <<use>>
+MRE ..> MCO : <<use>>
+MRL ..> MRE : <<use>>
+
+MCO ..> AUTH : <<use>>
+MIN ..> AUTH : <<use>>
+MAL ..> AUTH : <<use>>
+MRE ..> AUTH : <<use>>
+MRL ..> AUTH : <<use>>
+MAT ..> AUTH : <<use>>
+
+' Acesso a dados
+AUTH -( IJDBC
+MCO -( IJDBC
+MIN -( IJDBC
+MAL -( IJDBC
+MRE -( IJDBC
+MAT -( IJDBC
+MRL -( IJDBC
+IJDBC -- DB
+
+MRL -( IFS
+IFS -- FS
+
+@enduml
