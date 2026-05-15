@@ -78,6 +78,10 @@ Com a chegada das Olimpíadas, um novo sistema de gestão é necessário para co
 
 <img width="700px" src="imagens/diagrama-de-pacotes.png" alt="Diagrama de Pacotes"/>
 
+### Diagrama de Sequência
+
+<img width="700px" src="imagens/diagrama-de-sequencia.png" alt="Diagrama de Sequência"/>
+
 ### Diagrama de Componentes
 
 <img width="700px" src="imagens/diagrama-de-componentes.png" alt="Diagrama de Componentes"/>
@@ -95,12 +99,14 @@ Trabalho-SGO/
 │   ├── diagrama-de-caso-de-uso.png
 │   ├── diagrama-de-classes.png
 │   ├── diagrama-de-pacotes.png
+│   ├── diagrama-de-sequencia.png
 │   ├── diagrama-de-componentes.png
 │   └── diagrama-de-implantação.png
 └── codigos/
     ├── diagrama-de-caso-de-uso.puml
     ├── diagrama-de-classes.puml
     ├── diagrama-de-pacotes.puml
+    ├── diagrama-de-sequencia.puml
     ├── diagrama-de-componentes.puml
     └── diagrama-de-implantação.puml
 ```

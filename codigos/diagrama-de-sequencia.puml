@@ -1,0 +1,130 @@
+@startuml diagrama-de-sequencia
+title Diagrama de Sequencia - Sistema de Gestao das Olimpiadas (SGO)
+
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 220
+skinparam ParticipantPadding 18
+skinparam BoxPadding 12
+
+actor "Representante\nde Delegacao" as REP
+actor "Administrador" as ADM
+actor "Arbitro" as ARB
+
+box "Sistema SGO" #F4F8FF
+  participant "Interface\nde Usuario" as UI
+  participant "API Gateway" as GW
+  participant ":InscricaoService" as IS
+  participant ":AlocacaoService" as AS
+  participant ":ResultadoService" as RS
+  participant ":Repositorio" as REPO
+end box
+
+database "Banco de\nDados" as DB
+
+== 1. Inscricao de Atleta ==
+
+REP -> UI : informa atleta, competicao e pais
+activate UI
+UI -> GW : POST /inscricoes
+activate GW
+GW -> IS : inscrever(atletaId, competicaoId, paisId)
+activate IS
+
+IS -> REPO : buscarCompeticao(competicaoId)
+activate REPO
+REPO -> DB : SELECT competicao
+DB --> REPO : competicao
+REPO --> IS : competicao
+deactivate REPO
+
+IS -> IS : validarPaisDoAtleta(atletaId, paisId, modalidade)
+
+alt atleta ja representa outro pais na modalidade
+  IS --> GW : erro: pais invalido
+  GW --> UI : 409 Conflito
+  UI --> REP : exibe mensagem de erro
+else inscricao valida
+  IS -> REPO : salvarInscricao(inscricao)
+  activate REPO
+  REPO -> DB : INSERT inscricao
+  DB --> REPO : ok
+  REPO --> IS : inscricao confirmada
+  deactivate REPO
+  IS --> GW : inscricao confirmada
+  GW --> UI : 201 Created
+  UI --> REP : exibe confirmacao
+end
+deactivate IS
+deactivate GW
+deactivate UI
+
+== 2. Alocacao de Local ==
+
+ADM -> UI : seleciona local, data e horario
+activate UI
+UI -> GW : POST /alocacoes
+activate GW
+GW -> AS : alocarLocal(competicaoId, localId, dataHora)
+activate AS
+
+AS -> REPO : buscarAlocacoes(localId, dataHora)
+activate REPO
+REPO -> DB : SELECT alocacoes do local
+DB --> REPO : lista de alocacoes
+REPO --> AS : lista de alocacoes
+deactivate REPO
+
+AS -> AS : verificarConflitoDeHorario(lista, dataHora)
+
+alt local ocupado no horario
+  AS --> GW : erro: conflito de horario
+  GW --> UI : 409 Conflito
+  UI --> ADM : exibe mensagem de conflito
+else local disponivel
+  AS -> REPO : salvarAlocacao(competicaoId, localId, dataHora)
+  activate REPO
+  REPO -> DB : UPDATE competicao
+  DB --> REPO : ok
+  REPO --> AS : alocacao confirmada
+  deactivate REPO
+  AS --> GW : alocacao confirmada
+  GW --> UI : 200 OK
+  UI --> ADM : exibe confirmacao
+end
+deactivate AS
+deactivate GW
+deactivate UI
+
+== 3. Registro de Resultados ==
+
+ARB -> UI : informa 1o, 2o e 3o colocados
+activate UI
+UI -> GW : POST /resultados
+activate GW
+GW -> RS : registrarResultado(competicaoId, colocados)
+activate RS
+
+RS -> REPO : buscarCompeticao(competicaoId)
+activate REPO
+REPO -> DB : SELECT competicao
+DB --> REPO : competicao
+REPO --> RS : competicao
+deactivate REPO
+
+RS -> RS : atribuirMedalhas(ouro, prata, bronze)
+
+RS -> REPO : salvarResultado(resultado, medalhas)
+activate REPO
+REPO -> DB : INSERT resultado + medalhas
+DB --> REPO : ok
+REPO --> RS : resultado registrado
+deactivate REPO
+
+RS --> GW : resultado registrado
+GW --> UI : 201 Created
+UI --> ARB : exibe medalhas atribuidas
+deactivate RS
+deactivate GW
+deactivate UI
+
+@enduml
